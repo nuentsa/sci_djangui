@@ -1,6 +1,5 @@
 # sci_djangui
 Simulation de rentabilité des investissements immobiliers entre amis
-Bien sûr, voici un exemple de README pour votre projet de calcul de rentabilité pour une SCI (Société Civile Immobilière) utilisant Python et le framework Streamlit. Assurez-vous d'ajuster les sections selon les besoins spécifiques de votre projet :
 
 ---
 
@@ -50,9 +49,11 @@ Ce projet vise à faciliter le calcul de rentabilité pour une SCI en fournissan
 
 ## Structure du Projet
 
-- **main.py :** Le script principal contenant le code Streamlit pour l'interface utilisateur.
+- **Accueil.py :** Le script principal contenant le code Streamlit pour l'interface utilisateur.
 
 - **serializer.py :** Module contenant les fonctions de sauvegarde et restauration des simulations.
+
+- **pages/ :** Les differentes pages de l'application.
 
 - **requirements.txt :** Fichier spécifiant les dépendances Python nécessaires pour le projet.
 
