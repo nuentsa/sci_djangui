@@ -1,6 +1,7 @@
 import math
 import streamlit as st
-
+from streamlit_extras.switch_page_button import switch_page
+import BienImmo
 
 def calcul_mensualite(taux_interet, taux_assurance, montant_financement, duree_annees):
     # Conversion des taux en valeurs décimales
@@ -27,17 +28,17 @@ def calcul_mensualite(taux_interet, taux_assurance, montant_financement, duree_a
 
     return mensualite, montant_assurance_mensuelle, cout_total_credit
 
-def main(): 
-    st.subheader("Financement")
-    if 'current_prop' not in st.session_state:
-        st.write("Pas de bien en cours de simulation...")
-        st.write("Selectionnez d'abord un bien sur la page d'accueil")
-
-    property_details = st.session_state['current_prop']
-    enveloppe_globale = sum(property_details["prix_achat"].values())
+# Calculer le financement par credit bancaire ou apport personnel
+def simuler_mensualites(bien): 
+    enveloppe_globale = bien.enveloppe_financement() 
     montant_financement = st.number_input("J'emprunte", min_value=0.0, value=enveloppe_globale, step=100.0)
-    apport_personnel = st.number_input("Avec un apport de ", value=max(0,(enveloppe_globale - montant_financement)))
+    frais_bancaires = 2000.0 # TODO Define as constant
+    caution_credit = 0.015*montant_financement # TODO define as constant
+    st.write(f"incluant des frais de dossier de : {frais_bancaires}€, et une caution credit de : {caution_credit}€")
+        
+    apport_personnel = st.number_input("Avec un apport personnel de ", value=max(0,(enveloppe_globale - montant_financement)))
 
+    
     if montant_financement > 0 :
         col1, col2 = st.columns(2, gap="large")
         with col1: 
@@ -48,6 +49,5 @@ def main():
             
         mensualite, montant_assurance_mensuelle, cout_total_credit = calcul_mensualite(taux_interet, taux_assurance, montant_financement, duree_annees)
         st.write(f"Mensualite : {round(mensualite, 2)}€, dont assurances : {round(montant_assurance_mensuelle, 2)}€, Cout Total credit : {round(cout_total_credit, 2)}€")
-    st.divider()
-
-main()
+        bien.financement(apport_personnel, mensualite, montant_assurance_mensuelle)
+    return bien

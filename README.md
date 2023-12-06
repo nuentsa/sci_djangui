@@ -38,7 +38,7 @@ Ce projet vise à faciliter le calcul de rentabilité pour une SCI en fournissan
 1. Exécutez l'application Streamlit :
 
    ```bash
-   streamlit run app.py
+   streamlit run main.py
    ```
 
 2. Ouvrez votre navigateur et accédez à l'URL indiquée par Streamlit (généralement http://localhost:8501).
@@ -49,11 +49,13 @@ Ce projet vise à faciliter le calcul de rentabilité pour une SCI en fournissan
 
 ## Structure du Projet
 
-- **Accueil.py :** Le script principal contenant le code Streamlit pour l'interface utilisateur.
+- **main.py :** Le script principal contenant le code Streamlit pour l'interface utilisateur.
 
 - **serializer.py :** Module contenant les fonctions de sauvegarde et restauration des simulations.
 
-- **pages/ :** Les differentes pages de l'application.
+- **BienImmo.py :** Module contenant la definition d'un bien et les attributs essentiels
+
+- **pages/ :** Les differentes sous pages de l'application.
 
 - **requirements.txt :** Fichier spécifiant les dépendances Python nécessaires pour le projet.
 
