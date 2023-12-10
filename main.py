@@ -4,10 +4,14 @@ import serializer
 from streamlit_extras.switch_page_button import switch_page
 import BienImmo
 import Financement
-import math
+import json
 
-
-
+# Nombre maximum de biens dans l'historique
+LIMIT_HISTORIQUE = 10
+def update_history():
+    items = serializer.charger_liste_biens(LIMIT_HISTORIQUE)
+    df = pd.DataFrame(items)
+    st.write(df)
 def main():
     st.title("Simulation Express")
     st.subheader("Bien immobilier et Rentabilité brute")
@@ -26,7 +30,7 @@ def main():
         url_du_bien = st.text_input("Lien de l'annonce")
     
     # Details du bien pour sauvegarde et references futures
-    bien = BienImmo.Bien(
+    bien = BienImmo.Bien(dict(
         prix_bien=prix_bien, 
         travaux=travaux, 
         mobilier=mobilier,
@@ -36,7 +40,7 @@ def main():
         superficie=superficie, 
         loyer_mensuel=loyer_mensuel, 
         addresse=addresse_bien, 
-        url_annonce=url_du_bien)
+        url_annonce=url_du_bien))
     
 
     # L'enveloppe globale contient le prix du bien, des travaux, des frais bancaires eventuels et  autres frais annexes
@@ -55,9 +59,8 @@ def main():
         except Exception as e:
             st.error("Error while saving the record")
             print("Error while saving the record {}".format(e))
-
-    df = pd.DataFrame([bien.to_dict_summary()])
-    st.write(df)
+    update_history()
+    
 
 main()
 
