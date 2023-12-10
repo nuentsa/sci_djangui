@@ -31,23 +31,19 @@ def calcul_mensualite(taux_interet, taux_assurance, montant_financement, duree_a
 # Calculer le financement par credit bancaire ou apport personnel
 def simuler_mensualites(bien): 
     enveloppe_globale = bien.enveloppe_financement() 
-    montant_financement = st.number_input("J'emprunte", min_value=0.0, value=enveloppe_globale, step=100.0)
-    frais_bancaires = 2000.0 # TODO Define as constant
-    caution_credit = 0.015*montant_financement # TODO define as constant
-    st.write(f"incluant des frais de dossier de : {frais_bancaires}€, et une caution credit de : {caution_credit}€")
-        
-    apport_personnel = st.number_input("Avec un apport personnel de ", value=max(0,(enveloppe_globale - montant_financement)))
-
-    
+    apport_personnel = st.number_input("Avec un apport personnel de ", value=enveloppe_globale)
+    montant_financement = st.number_input("J'emprunte", min_value=0.0, value=max(0.0,(enveloppe_globale - apport_personnel)), step=100.0, help="autres frais bancaires non pris en compte")
+    col1, col2 = st.columns(2, gap="large")
+    nombre_de_parts = col1.number_input("Nombre de parts de la SCI ", value=13010, step=10)
+    apport_par_part = round(apport_personnel / nombre_de_parts, 2)
+    col2.write(f"Apport initial par part: {apport_par_part}€ ")
+    bien.ajouter_apport_personnel(nombre_de_parts, apport_par_part)
     if montant_financement > 0 :
-        col1, col2 = st.columns(2, gap="large")
-        with col1: 
-            duree_annees = st.slider("Sur une durée de", min_value=2, max_value=25, value=20)
-            taux_interet = st.slider("à un taux d'intérêt de ", min_value=0.0, max_value=8.0, value=4.5)
-        with col2:
-            taux_assurance = st.slider("et un taux d'assurance de  ", min_value=0.0, max_value=3.0, value=0.5)
-            
-        mensualite, montant_assurance_mensuelle, cout_total_credit = calcul_mensualite(taux_interet, taux_assurance, montant_financement, duree_annees)
-        st.write(f"Mensualite : {round(mensualite, 2)}€, dont assurances : {round(montant_assurance_mensuelle, 2)}€, Cout Total credit : {round(cout_total_credit, 2)}€")
-        bien.financement(apport_personnel, mensualite, montant_assurance_mensuelle)
+        duree_annees = st.slider("Sur une durée de", min_value=2, max_value=25, value=20)
+        taux_interet = st.slider("à un taux d'intérêt de ", min_value=0.0, max_value=8.0, value=4.5)
+        taux_assurance = st.slider("et un taux d'assurance de  ", min_value=0.0, max_value=3.0, value=0.5)
+        st.divider()
+        mensualite_credit, assurance_mensuelle, cout_total_credit = calcul_mensualite(taux_interet, taux_assurance, montant_financement, duree_annees)
+        st.write(f"Mensualite : {round(mensualite_credit, 2)}€, dont assurances : {round(assurance_mensuelle, 2)}€, Cout Total credit : {round(cout_total_credit, 2)}€")
+        bien.ajouter_mensualite(mensualite_credit+assurance_mensuelle)
     return bien

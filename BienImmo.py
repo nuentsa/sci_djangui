@@ -16,7 +16,12 @@ class Bien:
     def ajouter_frais_bancaires(self, frais_dossier, caution_credit):
         self.frais_dossier = frais_dossier
         self.caution_credit = caution_credit
-    
+    def ajouter_apport_personnel(self, nombre_de_parts, apport_par_part):
+        self.nombre_de_parts = nombre_de_parts
+        self.apport_par_part = apport_par_part
+    # Mensualite d'un eventuel credit bancaire, y compris les assurances
+    def ajouter_mensualite(self, mensualite):
+        self.mensualite = mensualite
     # Enveloppe de financement, excluant des frais bancaires eventuels
     def enveloppe_financement(self):
         return self.prix_bien + self.travaux + self.mobilier + self.frais_notaires
@@ -33,13 +38,14 @@ class Bien:
     # Save the immo details to a more concise dictionary for display
     def to_dict_summary(self):
         return {
+            "Localisation": self.addresse,
             "Prix Achat": self.enveloppe_financement(),
-            "Charges Fixes": self.charges_copro + self.taxes_foncieres,
-            "Loyer Mensuel": self.loyer_mensuel,
+            "Charges annuelles": self.charges_copro + self.taxes_foncieres,
+            "Loyer Annuel": self.loyer_mensuel * 12,
             "Superficie": self.superficie,
             "Rentabilite": self.rentabilite(),
-            "Localisation": self.addresse,
-            "Annonce": self.url_annonce
+            "Apport par part": self.apport_par_part,
+            "Lien Annonce": self.url_annonce
         }
     def financement(self, apport_personnel, mensualite, assurance_mensuelle):
         self.apport_personnel = apport_personnel

@@ -17,7 +17,7 @@ def main():
     mobilier = st.number_input("Mobilier", step=100.0)
     superficie = st.number_input("Superficie", step=1)
     loyer_mensuel = st.number_input("Loyer mensuel estimé", step=10)
-    with st.expander("Frais Notaires et Charges liées au bien"):
+    with st.expander("Frais de notaires et charges annuelles fixes"):
         frais_notaire = st.number_input("Frais de notaire", value=frais_notaire, step=100.0)
         charges_copro = st.number_input("Charges annuelles de copropriété", step=50.0)
         taxes_foncieres = st.number_input("Taxes Foncieres", step=50.0)
@@ -45,12 +45,9 @@ def main():
     st.divider()
     if prix_bien == 0:
         return
-    df = pd.DataFrame([bien.to_dict_summary()])
-    st.write(df)
-    
+
     with st.expander("Simulez le financement"):
         Financement.simuler_mensualites(bien)
-
     if st.button("Sauvegarder ce bien"):
         try: 
             serializer.enregistrer_bien(bien)
@@ -59,6 +56,8 @@ def main():
             st.error("Error while saving the record")
             print("Error while saving the record {}".format(e))
 
+    df = pd.DataFrame([bien.to_dict_summary()])
+    st.write(df)
 
 main()
 
